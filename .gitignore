@@ -4,9 +4,13 @@ frontend/node_modules/
 
 # system file
 .DS_Store
+.vscode
 
 # Vite
 frontend/dist/
 
 # Logs
 backend/logs
+
+# env
+.env
