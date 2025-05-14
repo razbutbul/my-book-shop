@@ -6,8 +6,8 @@ const PORT = 3000;
 
 app.use(express.json());
 
-const bookRoutes = require("./routes/bookRoutes");
-app.use("/api/books", bookRoutes);
+const apiRoutes = require("./routes");
+app.use("/api", apiRoutes);
 
 app.get("/", (req, res) => {
   res.send("BookShop server side");
