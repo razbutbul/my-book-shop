@@ -1,0 +1,47 @@
+.book-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 25px;
+}
+
+.book-card-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.book-card {
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease-in-out;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+}
+
+.book-cover {
+  object-fit: contain;
+  background-color: #f9f9f9;
+  padding: 8px;
+}
+
+.custom-pagination .MuiPaginationItem-root {
+  color: var(--pagination-color);
+  border-color: var(--pagination-color);
+}
+
+.custom-pagination .MuiPaginationItem-root.Mui-selected {
+  background-color: var(--pagination-color);
+  color: #fff;
+}
+
+.custom-pagination .MuiPaginationItem-root.Mui-selected:hover {
+  background-color: var(--pagination-color);
+}
