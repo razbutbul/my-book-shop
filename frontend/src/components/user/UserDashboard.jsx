@@ -10,7 +10,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <NavBar role="user" title="User Dashboard" onShowBooks={handleToggleBooks}>
+    <NavBar role="user" onShowBooks={handleToggleBooks}>
       {showBooks && <BookList />}
     </NavBar>
   );

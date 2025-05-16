@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchAllBooks } from "../../api/booksApi";
+import { fetchAllBooks, deleteBook } from "../../api/booksApi";
+import SearchField from "../common/SearchField";
 import {
   Card,
   CardContent,
@@ -9,6 +10,11 @@ import {
   CardMedia,
   Pagination,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import "./BookList.css";
@@ -16,23 +22,59 @@ import "./BookList.css";
 const BookList = () => {
   const theme = useTheme();
   const [books, setBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const role = localStorage.getItem("role");
   const roleColor = theme.palette[role]?.main || "primary";
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState(null);
   const booksPerPage = 8;
 
   useEffect(() => {
-    fetchAllBooks().then(setBooks).catch(console.error);
+    fetchBooks();
   }, []);
+
+  const handleOpenConfirmDialog = (bookId) => {
+    setSelectedBookId(bookId);
+    setOpenDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteBook(selectedBookId);
+      await fetchBooks();
+    } catch (err) {
+      console.error("Error deleting book:", err.message);
+    } finally {
+      handleCloseDialog();
+    }
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedBookId(null);
+  };
+
+  const fetchBooks = async () => {
+    try {
+      const data = await fetchAllBooks();
+      setBooks(data);
+    } catch (err) {
+      console.error("Failed to fetch books:", err.message);
+    }
+  };
+
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const getCurrentBooks = () => {
     const indexOfLastBook = currentPage * booksPerPage;
     const indexOfFirstBook = indexOfLastBook - booksPerPage;
-    return books.slice(indexOfFirstBook, indexOfLastBook);
+    return filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
   };
 
   const currentBooks = getCurrentBooks();
-  const pageCount = Math.ceil(books.length / booksPerPage);
+  const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
 
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
@@ -49,7 +91,7 @@ const BookList = () => {
           sx={{ "--pagination-color": roleColor }}
         />
       </Box>
-
+      <SearchField searchTerm={searchTerm} onSearch={setSearchTerm} />
       <div className="book-list-container">
         {currentBooks.map((book) => (
           <div className="book-card-wrapper" key={book.id}>
@@ -67,7 +109,10 @@ const BookList = () => {
                   {book.title}
                 </Typography>
                 <Typography variant="body2" color={roleColor}>
-                  {book?.author}
+                  {book.author_name}
+                </Typography>
+                <Typography variant="body2" color={roleColor}>
+                  {book.price}$
                 </Typography>
               </CardContent>
 
@@ -77,7 +122,12 @@ const BookList = () => {
                     <Button size="small" color="primary" variant="outlined">
                       Edit
                     </Button>
-                    <Button size="small" color="error" variant="outlined">
+                    <Button
+                      size="small"
+                      color="error"
+                      variant="outlined"
+                      onClick={() => handleOpenConfirmDialog(book.id)}
+                    >
                       Delete
                     </Button>
                   </>
@@ -91,6 +141,29 @@ const BookList = () => {
           </div>
         ))}
       </div>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This action will permanently delete the book.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

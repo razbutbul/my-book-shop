@@ -29,7 +29,12 @@ const login = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        userName: user.userName,
+      },
     });
   } catch (error) {
     logger.error("authController - login error: " + error.message);

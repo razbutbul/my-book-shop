@@ -1,45 +1,44 @@
-  USE bookshop;
-  DROP TABLE IF EXISTS books;
-  DROP TABLE IF EXISTS authors;
-  DROP TABLE IF EXISTS publishers;
-  DROP TABLE IF EXISTS users;
+USE bookshop;
 
+DROP TABLE IF EXISTS books;
+DROP TABLE IF EXISTS authors;
+DROP TABLE IF EXISTS publishers;
+DROP TABLE IF EXISTS users;
 
-  CREATE TABLE authors (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );
+CREATE TABLE authors (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
- INSERT INTO authors (id, name)
+INSERT INTO authors (id, name)
 VALUES 
-  (1, 'George Orwell'),(2, 'Frank Herbert'),(3, 'Stephen King'),(4, 'William Shakespeare'),(5, 'Bram Stoker'),
-  (6, 'Mary Shelley'),(7, 'Roald Dahl'),(8, 'Jane Austen'),(9, 'Toni Morrison'),(10, 'Hermann Hesse');
+  (1, 'George Orwell'), (2, 'Frank Herbert'), (3, 'Stephen King'),
+  (4, 'William Shakespeare'), (5, 'Bram Stoker'), (6, 'Mary Shelley'),
+  (7, 'Roald Dahl'), (8, 'Jane Austen'), (9, 'Toni Morrison'), (10, 'Hermann Hesse');
 
+CREATE TABLE publishers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE
+);
 
-  CREATE TABLE publishers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-  );
+INSERT INTO publishers (id, name)
+VALUES (1, 'Razbutbul Publishing');
 
-  INSERT INTO publishers (id, name)
-  VALUES (1, 'Razbutbul Publishing');
-
-
-  CREATE TABLE books (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    book_description  TEXT
-    stock INT DEFAULT 0,
-    author_id INT,
-    publisher_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (author_id) REFERENCES authors(id),
-    FOREIGN KEY (publisher_id) REFERENCES publishers(id)
-  );
+CREATE TABLE books (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  book_description TEXT,
+  stock INT DEFAULT 0,
+  author_id INT,
+  publisher_id INT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_id) REFERENCES authors(id),
+  FOREIGN KEY (publisher_id) REFERENCES publishers(id)
+);
 
 INSERT INTO books (title, price, book_description, stock, author_id, publisher_id)
 VALUES 
@@ -54,17 +53,17 @@ VALUES
   ('Beloved', 59.90, 'A woman is haunted by a painful past.', 12, 9, 1),
   ('Siddhartha', 59.90, 'A man looks for peace and truth in life.', 12, 10, 1);
 
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255),
+  password VARCHAR(255) NOT NULL,
+  role ENUM('user', 'admin') DEFAULT 'user',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
-  CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255),
-    password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') DEFAULT 'user',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );
-
-  INSERT INTO users (username, email, password, role)
-  VALUES ('AdminUser', 'admin@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'admin'),
-         ('User', 'user@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'user');
+INSERT INTO users (username, email, password, role)
+VALUES 
+  ('RazAdmin', 'admin@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'admin'),
+  ('RazUser', 'user@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'user');
