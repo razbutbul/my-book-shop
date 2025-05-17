@@ -1,4 +1,10 @@
 import { BASE_URL } from "./apiConfig";
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const fetchAllBooks = async () => {
   const response = await fetch(`${BASE_URL}/books`);
 
@@ -13,6 +19,7 @@ export const addABook = async (bookData) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...getAuthHeaders(),
     },
     body: JSON.stringify(bookData),
   });
@@ -27,6 +34,9 @@ export const addABook = async (bookData) => {
 export const deleteBook = async (bookId) => {
   const response = await fetch(`${BASE_URL}/books/${bookId}`, {
     method: "DELETE",
+    headers: {
+      ...getAuthHeaders(),
+    },
   });
 
   if (!response.ok) {

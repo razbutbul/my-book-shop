@@ -27,6 +27,10 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    logger.info(
+      `User with ID=${user.id} successfully logged in with role=${user.role}`
+    );
+
     res.json({
       token,
       user: {

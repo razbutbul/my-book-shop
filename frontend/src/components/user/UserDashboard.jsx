@@ -3,14 +3,14 @@ import NavBar from "../common/NavBar";
 import BookList from "../common/BookList";
 
 const UserDashboard = () => {
-  const [showBooks, setShowBooks] = useState(false);
+  const [showBooks, setShowBooks] = useState(true);
 
   const handleToggleBooks = () => {
     setShowBooks((prev) => !prev);
   };
 
   return (
-    <NavBar role="user" onShowBooks={handleToggleBooks}>
+    <NavBar onShowBooks={handleToggleBooks} isLoggedIn>
       {showBooks && <BookList />}
     </NavBar>
   );

@@ -4,7 +4,7 @@ import BookList from "../common/BookList";
 import AddBookDialog from "./AddBookDialog";
 
 const AdminDashboard = () => {
-  const [showBooks, setShowBooks] = useState(false);
+  const [showBooks, setShowBooks] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
   const handleToggleBooks = () => {
@@ -21,10 +21,10 @@ const AdminDashboard = () => {
   return (
     <>
       <NavBar
-        role="admin"
         addABook={"Add books"}
         onShowBooks={handleToggleBooks}
         onAddBookClick={handleOpenAddDialog}
+        isLoggedIn
       >
         {showBooks && <BookList />}
       </NavBar>
