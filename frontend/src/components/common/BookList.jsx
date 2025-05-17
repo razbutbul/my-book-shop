@@ -17,9 +17,11 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import PurchaseDialog from "../user/PurchaseDialog";
 import "./BookList.css";
+import CustomTooltip from "../common/CustomToolTip";
 
-const BookList = () => {
+const BookList = ({ refreshTrigger }) => {
   const theme = useTheme();
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,11 +30,24 @@ const BookList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState(null);
+  const [openPurchaseDialog, setOpenPurchaseDialog] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
   const booksPerPage = 8;
+  const isLoggedIn = !!localStorage.getItem("token");
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [refreshTrigger]);
+
+  const handleOpenPurchaseDialog = (book) => {
+    setSelectedBook(book);
+    setOpenPurchaseDialog(true);
+  };
+
+  const handleClosePurchaseDialog = () => {
+    setSelectedBook(null);
+    setOpenPurchaseDialog(false);
+  };
 
   const handleOpenConfirmDialog = (bookId) => {
     setSelectedBookId(bookId);
@@ -132,9 +147,24 @@ const BookList = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button size="small" color="success" variant="outlined">
-                    Buy
-                  </Button>
+                  <CustomTooltip
+                    title="You must be logged in to purchase a book"
+                    disable={isLoggedIn}
+                  >
+                    <Button
+                      disabled={!isLoggedIn}
+                      sx={{
+                        backgroundColor: isLoggedIn
+                          ? theme.palette.user.main
+                          : "white",
+                        color: "white",
+                      }}
+                      variant="outlined"
+                      onClick={() => handleOpenPurchaseDialog(book)}
+                    >
+                      Buy
+                    </Button>
+                  </CustomTooltip>
                 )}
               </CardActions>
             </Card>
@@ -164,6 +194,12 @@ const BookList = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <PurchaseDialog
+        open={openPurchaseDialog}
+        onClose={handleClosePurchaseDialog}
+        book={selectedBook}
+        onPurchaseSuccess={fetchBooks}
+      />
     </>
   );
 };

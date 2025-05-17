@@ -8,7 +8,7 @@ const LoginDialog = ({ open, role, onClose, onExited }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2, color: roleColor, fontWeight: "bold" }}>
+      <DialogTitle sx={{ m: 0, p: 3, color: roleColor, fontWeight: "bold" }}>
         Login as {isAdmin(role) ? "Admin" : "User"}
         <IconButton
           aria-label="close"

@@ -6,6 +6,7 @@ import AddBookDialog from "./AddBookDialog";
 const AdminDashboard = () => {
   const [showBooks, setShowBooks] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [refreshBooks, setRefreshBooks] = useState(false);
 
   const handleToggleBooks = () => {
     setShowBooks((prev) => !prev);
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
 
   const handleBookAdded = () => {
     setShowBooks(true);
+    setRefreshBooks((prev) => !prev);
   };
 
   return (
@@ -26,7 +28,7 @@ const AdminDashboard = () => {
         onAddBookClick={handleOpenAddDialog}
         isLoggedIn
       >
-        {showBooks && <BookList />}
+        {showBooks && <BookList refreshTrigger={refreshBooks} />}
       </NavBar>
 
       <AddBookDialog

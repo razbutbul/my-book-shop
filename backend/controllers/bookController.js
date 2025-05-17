@@ -1,8 +1,19 @@
-const bookDAL = require("../dal/bookDAL");
+const {
+  getAllBooks,
+  findAuthorByName,
+  createAuthor,
+  findPublisherByName,
+  createPublisher,
+  insertBook,
+  deleteBookById,
+  updateAPurchase,
+  updateBooks,
+} = require("../dal/bookDAL");
+const logger = require("../logger");
 
 const getBooks = async (req, res) => {
   try {
-    const books = await bookDAL.getAllBooks();
+    const books = await getAllBooks();
     res.json(books);
   } catch (error) {
     logger.error("getBooks - error in getBooks: " + error.message);
@@ -20,30 +31,16 @@ const addBook = async (req, res) => {
       author_name,
       publisher_name,
     } = req.body;
-    const fields = [
-      title,
-      price,
-      book_description,
-      stock,
-      author_name,
-      publisher_name,
-    ];
 
-    if (fields.some((field) => !field)) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
+    const author = await findAuthorByName(author_name);
+    const author_id = author ? author.id : await createAuthor(author_name);
 
-    const author = await bookDAL.findAuthorByName(author_name);
-    let author_id = author
-      ? author.id
-      : await bookDAL.createAuthor(author_name);
-
-    const publisher = await bookDAL.findPublisherByName(publisher_name);
-    let publisher_id = publisher
+    const publisher = await findPublisherByName(publisher_name);
+    const publisher_id = publisher
       ? publisher.id
-      : await bookDAL.createPublisher(publisher_name);
+      : await createPublisher(publisher_name);
 
-    const newBook = await bookDAL.insertBook({
+    const newBook = await insertBook({
       title,
       price,
       book_description,
@@ -59,11 +56,37 @@ const addBook = async (req, res) => {
   }
 };
 
+const bookPurchase = async (req, res) => {
+  try {
+    const { bookId, quantity, purchasePrice, address, phone } = req.body;
+    const userId = req.user.userId;
+    logger.info("Calling updateAPurchase");
+
+    await updateAPurchase({
+      userId,
+      bookId,
+      quantity,
+      purchasePrice,
+      address,
+      phone,
+    });
+
+    await updateBooks({ bookId, quantity });
+    logger.info(
+      `Purchase successful: user ${userId} bought book ${bookId} x${quantity}`
+    );
+    res.status(201).json({ message: "Purchase successful" });
+  } catch (error) {
+    logger.error("Error in bookPurchase:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const deleteBook = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deleted = await bookDAL.deleteBookById(id);
+    const deleted = await deleteBookById(id);
 
     if (!deleted) {
       return res.status(404).json({ error: "Book not found" });
@@ -79,5 +102,6 @@ const deleteBook = async (req, res) => {
 module.exports = {
   getBooks,
   addBook,
+  bookPurchase,
   deleteBook,
 };

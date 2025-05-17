@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Box } from "@mui/material";
 import LoginDialog from "./LoginDialog";
 import "./Login.css";
@@ -6,6 +7,11 @@ import "./Login.css";
 function Login() {
   const [role, setRole] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
+
+  const handleContinueAsGuest = () => {
+    navigate("/");
+  };
 
   const handleOpenDialog = (selectedRole) => {
     setRole(selectedRole);
@@ -31,6 +37,14 @@ function Login() {
         gap={2}
         mt={3}
       >
+        <Button
+          variant="outlined"
+          color="success"
+          sx={{ width: "200px", color: "#0e4d45" }}
+          onClick={handleContinueAsGuest}
+        >
+          Continue as Guest
+        </Button>
         <Button
           variant="outlined"
           color="success"
