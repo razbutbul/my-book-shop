@@ -45,3 +45,20 @@ export const deleteBook = async (bookId) => {
 
   return await response.json();
 };
+
+export const bookPurchase = async (purchaseData) => {
+  const response = await fetch(`${BASE_URL}/books/purchase`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(purchaseData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to buy a book");
+  }
+
+  return await response.json();
+};

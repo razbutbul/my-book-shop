@@ -10,6 +10,10 @@ const customTheme = createTheme({
       main: "#0e4d45",
       contrastText: "white",
     },
+    disabled: {
+      main: "#ccc",
+      contrastText: "#fff",
+    },
   },
   components: {
     MuiButton: {

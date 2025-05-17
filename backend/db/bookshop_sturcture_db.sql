@@ -1,5 +1,6 @@
 USE bookshop;
 
+DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS authors;
 DROP TABLE IF EXISTS publishers;
@@ -67,3 +68,18 @@ INSERT INTO users (username, email, password, role)
 VALUES 
   ('RazAdmin', 'admin@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'admin'),
   ('RazUser', 'user@gmail.com', '$2a$12$sml6/PIuKDFg8Mimq2uwMeGbxetfOdLk85nJQT1tHKBdrW.jai3Dq', 'user');
+
+CREATE TABLE purchases (
+  purchase_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  book_id INT NOT NULL,
+  quantity INT NOT NULL CHECK (quantity >= 1),
+  total_price DECIMAL(10,2) NOT NULL,
+  purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  delivery_adress VARCHAR(255),
+  phone_number VARCHAR(20),
+
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+

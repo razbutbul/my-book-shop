@@ -1,4 +1,4 @@
-const authDAL = require("../dal/authDAL");
+const { getUserByEmail } = require("../dal/authDAL");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const logger = require("../logger");
@@ -7,7 +7,7 @@ const login = async (req, res) => {
   const { email, password, requestedRole } = req.body;
 
   try {
-    const user = await authDAL.getUserByEmail(email);
+    const user = await getUserByEmail(email);
     if (!user) {
       return res.status(401).json({ code: "INVALID_CREDENTIALS" });
     }

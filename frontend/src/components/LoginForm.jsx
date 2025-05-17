@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { isAdmin, getRoleColor } from "./login-utils";
+import { loginSchema } from "../validations/validationSchemas";
 
 const errorMessages = {
   INVALID_CREDENTIALS: "Email or password is incorrect.",
@@ -15,7 +17,15 @@ const LoginForm = ({ role }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      requestedRole: role,
+    },
+  });
+
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
   const isAdminRole = isAdmin(role);
@@ -29,11 +39,7 @@ const LoginForm = ({ role }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          requestedRole: role,
-        }),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -64,7 +70,7 @@ const LoginForm = ({ role }) => {
         label="Email"
         fullWidth
         margin="normal"
-        {...register("email", { required: "Email is required" })}
+        {...register("email")}
         error={!!errors.email}
         helperText={errors.email?.message}
       />
@@ -74,7 +80,7 @@ const LoginForm = ({ role }) => {
         type="password"
         fullWidth
         margin="normal"
-        {...register("password", { required: "Password is required" })}
+        {...register("password")}
         error={!!errors.password}
         helperText={errors.password?.message}
       />
@@ -90,7 +96,7 @@ const LoginForm = ({ role }) => {
         variant="contained"
         color={getRoleColor(role)}
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ mt: 4 }}
       >
         Login as {role}
       </Button>
