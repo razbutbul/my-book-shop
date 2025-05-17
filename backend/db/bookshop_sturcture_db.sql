@@ -1,4 +1,5 @@
-USE bookshop;
+CREATE DATABASE IF NOT EXISTS book_shop;
+USE book_shop;
 
 DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS books;
