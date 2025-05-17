@@ -13,18 +13,18 @@ All users (admin, user, or guest) can:
 
 ## User View
 
-Email: user@gmail.com
-Password: 123456
-After logging in, a user can:
+- Email: user@gmail.com
+- Password: 123456
+- After logging in, a user can:
 
 1. Purchase a book by selecting the desired quantity (limited by available stock).
 2. View a list of books they have purchased in the past.
 
 ## Admin View
 
-Email: admin@gmail.com
-Password: 123456
-After logging in, an admin can:
+- Email: admin@gmail.com
+- Password: 123456
+- After logging in, an admin can:
 
 1. Edit or delete existing books.
 2. Add new books, including all required details.
