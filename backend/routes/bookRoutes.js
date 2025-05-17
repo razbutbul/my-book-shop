@@ -11,6 +11,7 @@ const {
 } = require("../validations/bookValidation");
 
 router.get("/", bookController.getBooks);
+router.get("/user", authenticateUser, bookController.getUserPurchasedBooks);
 router.post(
   "/add",
   authenticateUser,
@@ -30,6 +31,14 @@ router.delete(
   authorizeAdmin,
   validate(idParamSchema),
   bookController.deleteBook
+);
+
+router.put(
+  "/:id",
+  authenticateUser,
+  authorizeAdmin,
+  validate(createBookSchema),
+  bookController.updateBook
 );
 
 module.exports = router;

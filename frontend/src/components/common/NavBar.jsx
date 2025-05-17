@@ -12,6 +12,8 @@ const NavBar = ({
   addABook,
   children,
   onShowBooks,
+  onShowMyPurchases,
+  recentPurchases,
   onAddBookClick,
   isLoggedIn,
   NavBarTitle,
@@ -42,9 +44,16 @@ const NavBar = ({
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             {title}
           </Typography>
-          <Button color="white" onClick={onAddBookClick}>
-            {addABook}
-          </Button>
+          {role === "admin" && (
+            <Button color="white" onClick={onAddBookClick}>
+              {addABook}
+            </Button>
+          )}
+          {role === "user" && (
+            <Button color="white" onClick={onShowMyPurchases}>
+              {recentPurchases}
+            </Button>
+          )}
           <Button color="white" onClick={onShowBooks}>
             All books
           </Button>
