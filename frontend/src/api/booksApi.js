@@ -62,3 +62,36 @@ export const bookPurchase = async (purchaseData) => {
 
   return await response.json();
 };
+
+export const getBooksByUserId = async () => {
+  const response = await fetch(`${BASE_URL}/books/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch books for this user");
+  }
+
+  return await response.json();
+};
+
+export const updateBook = async (bookId, updatedData) => {
+  const response = await fetch(`${BASE_URL}/books/${bookId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(updatedData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update book");
+  }
+
+  return await response.json();
+};

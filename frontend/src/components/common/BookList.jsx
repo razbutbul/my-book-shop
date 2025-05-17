@@ -21,7 +21,7 @@ import PurchaseDialog from "../user/PurchaseDialog";
 import "./BookList.css";
 import CustomTooltip from "../common/CustomToolTip";
 
-const BookList = ({ refreshTrigger }) => {
+const BookList = ({ refreshTrigger, onEditBook }) => {
   const theme = useTheme();
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -134,7 +134,12 @@ const BookList = ({ refreshTrigger }) => {
               <CardActions>
                 {role === "admin" ? (
                   <>
-                    <Button size="small" color="primary" variant="outlined">
+                    <Button
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                      onClick={() => onEditBook(book)}
+                    >
                       Edit
                     </Button>
                     <Button
@@ -149,7 +154,7 @@ const BookList = ({ refreshTrigger }) => {
                 ) : (
                   <CustomTooltip
                     title="You must be logged in to purchase a book"
-                    disable={isLoggedIn}
+                    isLoggedIn={isLoggedIn}
                   >
                     <Button
                       disabled={!isLoggedIn}

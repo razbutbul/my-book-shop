@@ -18,7 +18,6 @@ import { bookPurchase } from "../../api/booksApi";
 
 const PurchaseDialog = ({ open, onClose, book, onPurchaseSuccess }) => {
   const theme = useTheme();
-  console.log(book, "book");
   const {
     register,
     handleSubmit,

@@ -42,8 +42,10 @@ const idParamSchema = Joi.object({
     "any.required": "ID is required",
   }),
 });
+const updateBookSchema = createBookSchema;
 
 module.exports = {
   createBookSchema,
   idParamSchema,
+  updateBookSchema,
 };

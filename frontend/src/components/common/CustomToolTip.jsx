@@ -1,13 +1,16 @@
 import React from "react";
 import { Tooltip, useTheme } from "@mui/material";
 
-const CustomTooltip = ({ title, children, disable = true }) => {
+const CustomTooltip = ({ title, children, isLoggedIn }) => {
   const theme = useTheme();
+
+  if (isLoggedIn) {
+    return children;
+  }
 
   return (
     <Tooltip
       title={title}
-      disableHoverListener={disable}
       slotProps={{
         tooltip: {
           sx: {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,16 +13,19 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createBookSchema } from "../../validations/validationSchemas";
-import { addABook } from "../../api/booksApi";
+import { addABook, updateBook } from "../../api/booksApi";
 
-const AddBookDialog = ({ open, onClose, onBookAdded }) => {
+const AddBookDialog = ({ open, onClose, onBookAdded, initialBookData }) => {
   const theme = useTheme();
   const adminColor = theme.palette.admin?.main || theme.palette.primary.main;
+  const isEditMode = Boolean(initialBookData);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(createBookSchema),
@@ -39,10 +42,29 @@ const AddBookDialog = ({ open, onClose, onBookAdded }) => {
 
   const [serverError, setServerError] = useState("");
 
-  const onSubmit = async (formData) => {
+  useEffect(() => {
+    if (isEditMode && initialBookData) {
+      const { id, created_at, updated_at, ...editableFields } = initialBookData;
+      Object.entries(editableFields).forEach(([key, value]) => {
+        setValue(key, value);
+      });
+    } else {
+      reset();
+    }
+  }, [initialBookData, isEditMode, setValue, reset]);
+
+  const onSubmit = async () => {
     setServerError("");
     try {
-      await addABook(formData);
+      const data = getValues();
+
+      if (isEditMode) {
+        const { id, created_at, updated_at, ...cleanedData } = data;
+        await updateBook(initialBookData.id, cleanedData);
+      } else {
+        await addABook(data);
+      }
+
       onBookAdded();
       reset();
       onClose();
@@ -55,10 +77,9 @@ const AddBookDialog = ({ open, onClose, onBookAdded }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ color: adminColor, fontWeight: "bold" }}>
-        Add New Book
+        {isEditMode ? "Edit Book" : "Add New Book"}
       </DialogTitle>
 
-      {/* הטופס מתחיל כאן */}
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} mt={1}>
@@ -126,7 +147,7 @@ const AddBookDialog = ({ open, onClose, onBookAdded }) => {
             Cancel
           </Button>
           <Button variant="text" color="success" type="submit">
-            Add
+            {isEditMode ? "Save Changes" : "Add"}
           </Button>
         </DialogActions>
       </Box>

@@ -7,6 +7,18 @@ const AdminDashboard = () => {
   const [showBooks, setShowBooks] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [refreshBooks, setRefreshBooks] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [bookToEdit, setBookToEdit] = useState(null);
+
+  const handleOpenEditDialog = (book) => {
+    setBookToEdit(book);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setBookToEdit(null);
+    setEditDialogOpen(false);
+  };
 
   const handleToggleBooks = () => {
     setShowBooks((prev) => !prev);
@@ -28,13 +40,22 @@ const AdminDashboard = () => {
         onAddBookClick={handleOpenAddDialog}
         isLoggedIn
       >
-        {showBooks && <BookList refreshTrigger={refreshBooks} />}
+        {showBooks && (
+          <BookList
+            refreshTrigger={refreshBooks}
+            onEditBook={handleOpenEditDialog}
+          />
+        )}
       </NavBar>
 
       <AddBookDialog
-        open={openAddDialog}
-        onClose={handleCloseAddDialog}
+        open={openAddDialog || editDialogOpen}
+        onClose={() => {
+          handleCloseAddDialog();
+          handleCloseEditDialog();
+        }}
         onBookAdded={handleBookAdded}
+        initialBookData={bookToEdit}
       />
     </>
   );
