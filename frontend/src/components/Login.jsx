@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Box } from "@mui/material";
-import LoginDialog from "../components/LoginDialog";
-import "./HomePage.css";
+import LoginDialog from "./LoginDialog";
+import "./Login.css";
 
-function HomePage() {
+function Login() {
   const [role, setRole] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -22,7 +22,7 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      <h1>Welcome to Raz Butbul BookShop</h1>
+      <h1>Login to Raz Butbul's BookShop</h1>
 
       <Box
         display="flex"
@@ -62,4 +62,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Login;

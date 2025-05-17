@@ -112,7 +112,7 @@ const BookList = () => {
                   {book.author_name}
                 </Typography>
                 <Typography variant="body2" color={roleColor}>
-                  {book.price}$
+                  $ {book.price}
                 </Typography>
               </CardContent>
 

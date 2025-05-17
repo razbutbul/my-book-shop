@@ -8,14 +8,32 @@ import {
   Container,
 } from "@mui/material";
 import { Logout } from "../login-utils";
-const NavBar = ({ role, addABook, children, onShowBooks, onAddBookClick }) => {
+const NavBar = ({
+  addABook,
+  children,
+  onShowBooks,
+  onAddBookClick,
+  isLoggedIn,
+  NavBarTitle,
+}) => {
+  const role = localStorage.getItem("role");
   const navBarColor = `${role}.main`;
   const userName = localStorage.getItem("userName");
-  const title = `Hello ${userName}`;
+  const title = NavBarTitle ?? `Hello ${userName}`;
 
   const handleLogout = () => {
     Logout();
   };
+
+  const handleLogin = () => {
+    window.location.href = "/login";
+  };
+
+  const handleAuthClick = () => {
+    isLoggedIn ? handleLogout() : handleLogin();
+  };
+
+  const authButtonText = isLoggedIn ? "Log out" : "Log in";
 
   return (
     <>
@@ -30,8 +48,8 @@ const NavBar = ({ role, addABook, children, onShowBooks, onAddBookClick }) => {
           <Button color="white" onClick={onShowBooks}>
             All books
           </Button>
-          <Button color="white" onClick={handleLogout}>
-            Log out
+          <Button color="white" onClick={handleAuthClick}>
+            {authButtonText}
           </Button>
         </Toolbar>
       </AppBar>
