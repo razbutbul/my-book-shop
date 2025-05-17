@@ -13,6 +13,8 @@ All users (admin, user, or guest) can:
 
 ## User View
 
+Email: user@gmail.com
+Password: 123456
 After logging in, a user can:
 
 1. Purchase a book by selecting the desired quantity (limited by available stock).
@@ -20,6 +22,8 @@ After logging in, a user can:
 
 ## Admin View
 
+Email: admin@gmail.com
+Password: 123456
 After logging in, an admin can:
 
 1. Edit or delete existing books.
@@ -29,8 +33,6 @@ After logging in, an admin can:
 
 - Guests (not logged in) can view the list of books and use the search field.
 - Guests cannot purchase books.
-
-## Setup Instructions
 
 ## Tech Stack
 
@@ -57,7 +59,7 @@ After logging in, an admin can:
 ## Frontend:
 
 - `react-router-dom` – Routing
-- `@mui/material` – Material UI component library
+- `@mui/material` – Material UI component library to support responsive design across all screen sizes
 - `react-hook-form` – Form handling
 - `@hookform/resolvers` + `yup` – Form validation
 
